@@ -14,6 +14,29 @@ class CanvasControl {
     this.canvas.width = this.canvas.clientWidth * devicePixelRatio;
     this.canvas.height = this.canvas.clientHeight * devicePixelRatio;
   }
+  findTarget(pointer) {
+    // TODO
+    let target;
+    this.store.get("circle").forEach((item) => {
+      if (this.getDistance(item.meta, pointer) < item.meta.r) {
+        target = item;
+      }
+    });
+    return target;
+  }
+  /**
+   * @param {{x: number; y: number}} p1
+   * @param {{x: number; y: number}} p2
+   */
+  getDistance(p1, p2) {
+    return Math.sqrt((p1.x - p2.x) ** 2 + (p1.x - p2.x) ** 2);
+  }
+  getPointerPosition(e) {
+    return {
+      x: e.offsetX,
+      y: e.offsetY,
+    };
+  }
 }
 const entry = new CanvasControl({
   container: "canvas-main",
@@ -44,3 +67,9 @@ class Circle {
 }
 
 const c1 = new Circle();
+
+canvas.addEventListener("mousedown", (e) => {
+  const pos = entry.getPointerPosition(e);
+  const target = entry.findTarget(pos);
+  console.log(target);
+});
